@@ -26,6 +26,7 @@ const Login = () => {
         const response = await axios.post('https://localhost:7243/api/v1/signin', userData);
         console.log(response.status);
         if (response.status === 200){
+            setError(false);
             localStorage.setItem('user', JSON.stringify(response));
             router.push('/welcome')
         }
@@ -33,7 +34,7 @@ const Login = () => {
         setError(true);
     }
   };
-
+  console.log(error);
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-lg">
