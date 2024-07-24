@@ -13,7 +13,7 @@ interface SignIn{
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(Boolean);
+  const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { handleSubmit, register } = useForm<SignIn>();
   const router = useRouter();
@@ -30,7 +30,6 @@ const Login = () => {
             router.push('/welcome')
         }
     } catch (error){
-        console.log(error.response.data);
         setError(true);
     }
   };
@@ -80,7 +79,7 @@ const Login = () => {
             </button>
             </div>
           </div>
-          {error ? <span className="text-red-600 text-sm">Wrong username or password</span> : <div></div>}
+          {error && <span className="text-red-600 text-sm">Wrong username or password</span>}
           <div>
             <button
               type="submit"

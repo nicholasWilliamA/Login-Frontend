@@ -1,10 +1,11 @@
 'use client'
-import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 const WelcomePage = () =>{
     const [user, setUser] = useState(null);
     const router = useRouter();
+
+    //Get user info from local storage, and if there's no data from local storage, redirect to login page.
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if(storedUser){
@@ -16,7 +17,7 @@ const WelcomePage = () =>{
     
     const handleLogout = () => {
         localStorage.removeItem('user');
-        router.push('/'); // Redirect to login page
+        router.push('/'); // Redirect to login page.
     };
 
     if(user){

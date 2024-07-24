@@ -13,7 +13,10 @@ interface RegisterForm {
     password: string;
     confirmPassword: string;
 };
-
+/**
+ * This code defines a Joi schema for validating a registration form.
+ * Custom error messages are provided for each validation rule.
+ */
 const schema = Joi.object<RegisterForm>({
     fullname: Joi.string().required().messages({
         'any.required': 'Fullname is required',
@@ -36,6 +39,8 @@ const schema = Joi.object<RegisterForm>({
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState();
   const { handleSubmit, register, watch, formState: { errors } } = useForm<RegisterForm>({
     resolver: joiResolver(schema)
   });
@@ -48,15 +53,13 @@ const Register = () => {
       password: data.password,
     };
 
-    console.log(data);
-
     try {
       const response = await axios.post('https://localhost:7243/api/v1/signup', userData);
       if (response.status === 200) {
         router.push('/'); // Redirect to login page after successful registration
       }
     } catch (error) {
-      console.error(error);
+      setError(error.response.data);
     }
   };
 
@@ -66,6 +69,7 @@ const Register = () => {
         <h2 className="text-2xl font-bold text-center text-black">Register</h2>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
+        {error && <span className="text-red-600 text-sm">{error}</span>}
             <div>
               <label htmlFor="fullname" className="block text-sm font-medium text-gray-700">Fullname</label>
               <input
@@ -117,17 +121,17 @@ const Register = () => {
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
             <input
               id="confirmPassword"
-              type={showPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? 'text' : 'password'}
               className="form-control block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black pr-10"
               placeholder="Confirm your password here..."
               {...register('confirmPassword')}
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 mt-6"
             >
-              {showPassword ? (
+              {showConfirmPassword ? (
                 <EyeSlashIcon className="w-5 h-5" aria-hidden="true" />
               ) : (
                 <EyeIcon className="w-5 h-5" aria-hidden="true" />
@@ -144,7 +148,7 @@ const Register = () => {
             </button>
             <button
               type="button"
-              onClick={() => router.push('/')} // Navigate to login page
+              onClick={() => router.push('/')}
               className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-3"
             >
               Back to Login
